@@ -1,14 +1,25 @@
 import { ChevronDownIcon, UserCircleIcon } from "@heroicons/react/solid";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { toggleAccount } from "../headerSlice";
+import { closeAccount, toggleAccount } from "../headerSlice";
 
 const Header = () => {
   const { accountOpen } = useSelector((state) => state.header);
   const dispatch = useDispatch();
 
+  const closeOpenMenus = (e) => {
+    e.stopPropagation();
+    if (e.target.classList.contains("accountButton")) return;
+    if (!e.target.classList.contains("accountMenu")) {
+      dispatch(closeAccount());
+    }
+  };
+
   return (
-    <header className='py-5 px-2 md:px-0 border-b shadow-md w-screen'>
+    <header
+      onClick={(e) => closeOpenMenus(e)}
+      className='py-5 px-2 md:px-0 border-b shadow-md w-screen'
+    >
       <nav className='flex items-center justify-between container mx-auto'>
         <Link to='/'>
           <div className='flex items-center space-x-2'>
@@ -54,25 +65,34 @@ const Header = () => {
                 </defs>
               </svg>
             </div>
-            <h2 className='font-semibold text-2xl'>ProTrack</h2>
+            <h2 className='font-semibold text-2xl text-header-main'>
+              ProTrack
+            </h2>
           </div>
         </Link>
 
-        <div className='relative'>
+        <div className='relative accountButton'>
           <button
             onClick={() => dispatch(toggleAccount())}
-            className='flex items-center space-x-1 text-light-blue'
+            className='flex items-center space-x-1 text-light-blue hover:bg-gray-100 px-2 py-1 rounded-lg transition duration-100 accountButton'
           >
-            <UserCircleIcon className='h-8 w-8' />
-            <span className='font-semibold text-md'>Account</span>
-            <ChevronDownIcon className='h-5 w-5' />
+            <UserCircleIcon className='h-8 w-8 pointer-events-none' />
+            <span className='font-semibold text-md pointer-events-none'>
+              Account
+            </span>
+            <ChevronDownIcon className='h-5 w-5 pointer-events-none' />
           </button>
 
           {accountOpen && (
-            <ul className='absolute rounded-lg shadow-md border border-gray-200 w-full text-sm -bottom-10 bg-white'>
-              <li className='cursor-pointer py-2 px-4 rounded-lg hover:bg-gray-100'>
-                Log in
-              </li>
+            <ul className='accountMenu absolute rounded-lg shadow-md border border-gray-200 w-full text-sm -bottom-10 bg-white'>
+              <Link to='/login'>
+                <li
+                  onClick={() => dispatch(closeAccount())}
+                  className='accountMenu cursor-pointer py-2 px-4 rounded-lg hover:bg-gray-100'
+                >
+                  Log in
+                </li>
+              </Link>
             </ul>
           )}
         </div>

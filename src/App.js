@@ -5,11 +5,23 @@ import { Header } from "./Header";
 import { Home } from "./Home/";
 import { PrivateRoute } from "./PrivateRoute";
 import { NewTicket, Ticket, Tickets } from "./Tickets";
+import { useDispatch } from "react-redux";
+import { closeAccount } from "./Header/headerSlice";
 
 const App = () => {
+  const dispatch = useDispatch();
+
+  const closeOpenMenus = (e) => {
+    e.stopPropagation();
+    if (e.target.classList.contains("accountButton")) return;
+    if (!e.target.classList.contains("accountMenu")) {
+      dispatch(closeAccount());
+    }
+  };
+
   return (
     <>
-      <div className='container'>
+      <div onClick={(e) => closeOpenMenus(e)} className='min-h-screen'>
         <Header />
         <Routes>
           <Route path='/' element={<Home />} />
