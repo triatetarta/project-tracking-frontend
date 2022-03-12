@@ -7,6 +7,7 @@ import { PrivateRoute } from "./PrivateRoute";
 import { NewTicket, Ticket, Tickets } from "./Tickets";
 import { useDispatch } from "react-redux";
 import { closeAccount } from "./Header/headerSlice";
+import { Footer } from "./Footer/";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -37,6 +38,7 @@ const App = () => {
             <Route path='/ticket/:ticketId' element={<Ticket />} />
           </Route>
         </Routes>
+        <Footer />
       </div>
       <Toaster />
     </>

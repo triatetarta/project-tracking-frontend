@@ -4,7 +4,7 @@
   "description": "project tracking management frontend",
   "main": "index.js",
   "scripts": {
-    "start": "webpack serve",
+    "start": "webpack serve --open",
     "build": "webpack",
     "clean": "rm -rf dist"
   },

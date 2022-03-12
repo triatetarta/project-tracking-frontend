@@ -3,7 +3,7 @@ import completeImage from "../../../public/assets/images/complete.svg";
 
 const Details = () => {
   return (
-    <section className='flex flex-col space-y-28'>
+    <section className='flex flex-col space-y-28 text-header-main'>
       <div className='flex items-center'>
         <div className='w-7/12 flex-shrink-0 shadow-xl'>
           <img className='object-cover' src={planImage} alt='planning' />
