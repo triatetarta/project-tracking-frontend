@@ -1,11 +1,15 @@
 import { ChevronDownIcon, UserCircleIcon } from "@heroicons/react/solid";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { closeAccount, toggleAccount } from "../headerSlice";
+import { logout, reset } from "../../Auth/authSlice";
 
 const Header = () => {
   const { accountOpen } = useSelector((state) => state.header);
+  const { user } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
+
+  const navigate = useNavigate();
 
   const closeOpenMenus = (e) => {
     e.stopPropagation();
@@ -15,10 +19,16 @@ const Header = () => {
     }
   };
 
+  const onLogout = () => {
+    dispatch(logout());
+    dispatch(reset());
+    navigate("/");
+  };
+
   return (
     <header
       onClick={(e) => closeOpenMenus(e)}
-      className='py-5 px-2 md:px-0 border-b shadow-md w-screen'
+      className='py-5 px-2 md:px-0 border-b shadow-md w-screen sticky top-0 bg-white z-40 left-0 right-0'
     >
       <nav className='flex items-center justify-between container mx-auto'>
         <Link to='/'>
@@ -74,9 +84,16 @@ const Header = () => {
         <div className='relative accountButton'>
           <button
             onClick={() => dispatch(toggleAccount())}
-            className='flex items-center space-x-1 text-light-blue hover:bg-gray-100 px-2 py-1 rounded-lg transition duration-100 accountButton'
+            className='flex items-center space-x-1 text-light-blue px-2 py-1 rounded-lg hover:bg-gray-100 transition-all duration-200 accountButton'
           >
-            <UserCircleIcon className='h-8 w-8 pointer-events-none' />
+            {user ? (
+              <div className='h-7 w-7 rounded-full flex items-center justify-center bg-nice-orange font-semibold text-header-main text-base'>
+                {user?.name.charAt(0)}
+              </div>
+            ) : (
+              <UserCircleIcon className='h-8 w-8 pointer-events-none' />
+            )}
+
             <span className='font-semibold text-md pointer-events-none'>
               Account
             </span>
@@ -84,15 +101,50 @@ const Header = () => {
           </button>
 
           {accountOpen && (
-            <ul className='accountMenu absolute rounded-lg shadow-md border border-gray-200 w-full text-sm -bottom-10 bg-white'>
-              <Link to='/login'>
-                <li
-                  onClick={() => dispatch(closeAccount())}
-                  className='accountMenu cursor-pointer py-2 px-4 rounded-lg hover:bg-gray-100'
-                >
-                  Log in
-                </li>
-              </Link>
+            <ul className='accountMenu absolute rounded-lg shadow-md border border-gray-200 w-fit text-sm bg-white overflow-hidden z-50'>
+              {user ? (
+                <>
+                  <li className='bg-header-main w-full text-white py-2 px-4'>
+                    <div className='flex flex-col'>
+                      <p className='text-md'>{user?.name}</p>
+                      <p className='text-xs font-light'> {user?.email}</p>
+                    </div>
+                  </li>
+                  <li
+                    onClick={() => {
+                      dispatch(closeAccount());
+                      navigate("/account");
+                    }}
+                    className='accountMenu cursor-pointer py-2 px-4 hover:bg-gray-100'
+                  >
+                    Profile
+                  </li>
+                  <li
+                    onClick={() => {
+                      dispatch(closeAccount());
+                      navigate("/tickets");
+                    }}
+                    className='accountMenu cursor-pointer py-2 px-4 hover:bg-gray-100'
+                  >
+                    Tickets
+                  </li>
+                  <li
+                    onClick={onLogout}
+                    className='accountMenu cursor-pointer py-2 px-4 hover:bg-gray-100'
+                  >
+                    Log Out
+                  </li>
+                </>
+              ) : (
+                <Link to='/login'>
+                  <li
+                    onClick={() => dispatch(closeAccount())}
+                    className='accountMenu cursor-pointer py-2 pl-4 pr-20 hover:bg-gray-100'
+                  >
+                    Log in
+                  </li>
+                </Link>
+              )}
             </ul>
           )}
         </div>

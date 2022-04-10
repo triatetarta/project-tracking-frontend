@@ -1,6 +1,9 @@
+import { useNavigate } from "react-router-dom";
 import tasksBackground from "../../../public/assets/images/tasks.svg";
 
 const Showcase = () => {
+  const navigate = useNavigate();
+
   return (
     <section className='flex justify-between mt-10'>
       <div className='self-center'>
@@ -9,11 +12,14 @@ const Showcase = () => {
           management <br />
           tool used by agile teams
         </p>
-        <button className='mt-6 font-semibold bg-deep-blue text-white px-4 py-2 rounded-md hover:bg-light-blue transition duration-75 flex items-center'>
+        <button
+          onClick={() => navigate("/register")}
+          className='mt-6 font-semibold bg-deep-blue text-white px-4 py-2 rounded-md hover:bg-light-blue transition-colors duration-75 flex items-center'
+        >
           Get it free
         </button>
       </div>
-      <div className=''>
+      <div>
         <img src={tasksBackground} alt='task background' />
       </div>
     </section>

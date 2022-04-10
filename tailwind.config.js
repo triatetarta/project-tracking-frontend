@@ -12,6 +12,11 @@ module.exports = {
         "header-main": "#253858",
         "flow-yellow": "#FFE380",
         "flow-green": "#78f1c0",
+        "nice-orange": "#FF991F",
+        "gray-text": "#6B778C",
+        "red-text": "#DE350B",
+        "ticket-bg": "#DEEBFF",
+        "ticket-bg-hover": "#B3D4FF",
       },
       fontFamily: {
         Poppins: ["Poppins", "sans-serif"],

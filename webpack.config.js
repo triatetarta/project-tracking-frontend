@@ -61,6 +61,9 @@ module.exports = {
     extensions: ["*", ".js", ".jsx", ".json"],
   },
   devServer: {
+    proxy: {
+      "/api": "http://localhost:5000",
+    },
     static: {
       directory: path.join(__dirname, "dist"),
     },
