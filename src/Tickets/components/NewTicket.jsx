@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { motion } from "framer-motion";
 import toast from "react-hot-toast";
 import { createTicket, reset } from "../ticketSlice";
 import { useNavigate } from "react-router-dom";
@@ -14,8 +15,14 @@ const NewTicket = ({ setCreateNew }) => {
   const [project, setProject] = useState("React");
   const [description, setDescription] = useState("");
 
+  const textareaRef = useRef(null);
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    textareaRef.current.focus();
+  }, []);
 
   useEffect(() => {
     if (isError) {
@@ -51,8 +58,19 @@ const NewTicket = ({ setCreateNew }) => {
   };
 
   return (
-    <section className='fixed top-0 right-0 left-0 bottom-0 w-full h-full bg-black/20  backdrop-blur-sm z-50'>
-      <div className='container mx-auto flex justify-center'>
+    <motion.section
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.1 }}
+      className='fixed top-0 right-0 left-0 bottom-0 w-full h-full bg-black/20  backdrop-blur-sm z-50'
+    >
+      <motion.div
+        initial={{ y: 100, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        exit={{ y: 100, opacity: 0 }}
+        className='container mx-auto flex justify-center'
+      >
         <div className='bg-white rounded-md shadow-sm w-[400px] p-6 mt-24'>
           <h3 className='text-center text-lg font-semibold mb-5'>
             Create Ticket
@@ -100,7 +118,7 @@ const NewTicket = ({ setCreateNew }) => {
               </label>
               <select
                 className='p-2 border rounded-md mb-3 text-sm hover:bg-gray-100
-                transition-all duration-200 cursor-pointer'
+                transition-all duration-200 cursor-pointer focus:outline-1 outline-deep-blue'
                 name='project'
                 id='project'
                 value={project}
@@ -123,9 +141,10 @@ const NewTicket = ({ setCreateNew }) => {
                 )}
               </label>
               <textarea
+                ref={textareaRef}
                 rows={10}
                 style={{ resize: "none" }}
-                className='w-full p-2 border rounded-md mb-3 text-xs'
+                className='w-full p-2 border rounded-md mb-3 text-sm focus:outline-1 outline-deep-blue'
                 name='description'
                 id='description'
                 placeholder='Enter a description'
@@ -152,8 +171,8 @@ const NewTicket = ({ setCreateNew }) => {
             </div>
           </form>
         </div>
-      </div>
-    </section>
+      </motion.div>
+    </motion.section>
   );
 };
 

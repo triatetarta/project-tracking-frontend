@@ -2,6 +2,7 @@ import { PlusIcon } from "@heroicons/react/solid";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllTickets, reset } from "../ticketSlice";
+import { AnimatePresence } from "framer-motion";
 import NewTicket from "./NewTicket";
 import Ticket from "./Ticket";
 import TicketDetails from "./TicketDetails";
@@ -43,12 +44,14 @@ const Tickets = () => {
 
   return (
     <section className='min-h-[calc(100vh-17.9rem)] flex items-center justify-between flex-col text-header-main relative'>
-      {openTicket && (
-        <TicketDetails
-          ticketId={selectedId}
-          closeTicketDetails={closeTicketDetails}
-        />
-      )}
+      <AnimatePresence>
+        {openTicket && (
+          <TicketDetails
+            ticketId={selectedId}
+            closeTicketDetails={closeTicketDetails}
+          />
+        )}
+      </AnimatePresence>
 
       <div className='mt-10 flex flex-col bg-gray-100 py-4 px-6 rounded-lg'>
         <h1 className='text-xl font-semibold mb-4'>Ticket Board</h1>
@@ -74,7 +77,9 @@ const Tickets = () => {
         </button>
       </div>
 
-      {createNew && <NewTicket setCreateNew={setCreateNew} />}
+      <AnimatePresence>
+        {createNew && <NewTicket setCreateNew={setCreateNew} />}
+      </AnimatePresence>
 
       <div className='container fixed bottom-60'>
         <div className='relative'>
