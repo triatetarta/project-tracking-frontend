@@ -5,4 +5,7 @@ export const initialState = {
   isLoading: false,
   isSuccess: false,
   message: "",
+  updateSuccess: false,
+  deleteSuccess: false,
+  createSuccess: false,
 };

@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 
 const NewTicket = ({ setCreateNew }) => {
   const { user } = useSelector((state) => state.auth);
-  const { isLoading, isError, isSuccess, message } = useSelector(
+  const { isLoading, isError, isSuccess, message, createSuccess } = useSelector(
     (state) => state.tickets
   );
   const [name] = useState(user?.name);
@@ -29,7 +29,7 @@ const NewTicket = ({ setCreateNew }) => {
       toast.error(message);
     }
 
-    if (isSuccess) {
+    if (createSuccess) {
       dispatch(reset());
       setCreateNew(false);
       setProject("");

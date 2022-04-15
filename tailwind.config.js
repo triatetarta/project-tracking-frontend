@@ -11,7 +11,9 @@ module.exports = {
         "deep-blue": "#0254CF",
         "header-main": "#253858",
         "flow-yellow": "#FFE380",
+        "flow-yellow-deep": "#ffd957",
         "flow-green": "#78f1c0",
+        "flow-green-deep": "#4bebaa",
         "nice-orange": "#FF991F",
         "gray-text": "#6B778C",
         "red-text": "#DE350B",
@@ -26,5 +28,5 @@ module.exports = {
   variants: {
     extend: {},
   },
-  plugins: [],
+  plugins: [require("tailwind-scrollbar")],
 };

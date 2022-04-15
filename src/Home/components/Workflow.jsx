@@ -8,7 +8,9 @@ const Workflow = () => {
 
       <div className='flex items-center space-x-3 font-semibold uppercase p-4'>
         <div className='rounded-full bg-gray-200 h-4 w-4' />
-        <div className='bg-deep-blue text-white px-2 py-1 rounded-md'>New</div>
+        <div className='bg-deep-blue text-white px-2 py-1 rounded-md'>
+          To Do
+        </div>
         <div className='bg-gray-200 h-1 w-8' />
         <div className='bg-flow-yellow px-2 py-1 rounded-md'>In progress</div>
         <div className='bg-gray-200 h-1 w-8' />

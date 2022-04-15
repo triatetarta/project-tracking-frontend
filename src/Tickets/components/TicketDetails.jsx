@@ -1,7 +1,12 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getTicket } from "../ticketSlice";
-import { XIcon, ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/solid";
+import { deleteTicket, getTicket, updateTicket } from "../ticketSlice";
+import {
+  XIcon,
+  ChevronDownIcon,
+  ChevronUpIcon,
+  DotsHorizontalIcon,
+} from "@heroicons/react/solid";
 import { TicketIcon } from "@heroicons/react/outline";
 import { motion } from "framer-motion";
 import { Comment } from "../../Comments/";
@@ -10,16 +15,22 @@ import toast from "react-hot-toast";
 import { createComment, getComments } from "../../Comments/commentSlice";
 
 const TicketDetails = ({ closeTicketDetails, ticketId }) => {
-  const { ticket, isLoading, isError, message } = useSelector(
+  const { ticket, isLoading, isError, message, updateSuccess } = useSelector(
     (state) => state.tickets
   );
   const { comments, isLoading: commentsIsLoading } = useSelector(
     (state) => state.comment
   );
+  const { user } = useSelector((state) => state.auth);
   const [detailsOpen, setDetailsOpen] = useState(false);
+  const [ticketMenuOpen, setTicketMenuOpen] = useState(false);
   const [commentText, setCommentText] = useState("");
+  const [editDescription, setEditDescription] = useState(false);
+  const [editDescText, setEditDescText] = useState("");
 
   const dispatch = useDispatch();
+
+  const descRef = useRef();
 
   useEffect(() => {
     if (ticketId === undefined) return;
@@ -28,8 +39,15 @@ const TicketDetails = ({ closeTicketDetails, ticketId }) => {
     }
 
     dispatch(getTicket(ticketId));
+
     dispatch(getComments(ticketId));
   }, [isError, message, ticketId]);
+
+  useEffect(() => {
+    if (!updateSuccess || isLoading) return;
+
+    dispatch(getTicket(ticketId));
+  }, [updateSuccess, isLoading]);
 
   const closeHandle = (e) => {
     if (e.target.classList.contains("ticketBackdrop")) {
@@ -43,6 +61,47 @@ const TicketDetails = ({ closeTicketDetails, ticketId }) => {
     dispatch(createComment({ commentText, ticketId }));
     setCommentText("");
   };
+
+  const onEditEnable = () => {
+    if (ticket.user !== user._id) return;
+    setEditDescription(true);
+    setEditDescText(ticket.description);
+
+    setTimeout(() => {
+      descRef.current.focus();
+    }, 50);
+  };
+
+  const onEditCancel = () => {
+    setEditDescription(false);
+  };
+
+  const onEditSubmit = () => {
+    dispatch(
+      updateTicket({
+        ticketId: ticket._id,
+        ticketData: {
+          description: editDescText,
+        },
+      })
+    );
+    setEditDescription(false);
+  };
+
+  const onTicketDelete = () => {
+    dispatch(deleteTicket(ticketId));
+    closeTicketDetails();
+  };
+
+  const getStatusStyles = useCallback(() => {
+    if (ticket?.status === "to do") {
+      return "bg-deep-blue text-white hover:bg-light-blue";
+    } else if (ticket?.status === "in progress") {
+      return "bg-flow-yellow text-header-main hover:bg-flow-yellow-deep";
+    } else if (ticket?.status === "closed") {
+      return "bg-flow-green text-header-main hover:bg-flow-green-deep";
+    }
+  }, [ticket]);
 
   return (
     <motion.div
@@ -67,22 +126,141 @@ const TicketDetails = ({ closeTicketDetails, ticketId }) => {
             <h3 className='ml-1 font-medium'>Ticket Details</h3>
           </div>
 
-          <div
-            onClick={closeTicketDetails}
-            className='h-10 w-10 flex items-center justify-center cursor-pointer hover:bg-gray-100 transition-all duration-200 rounded-lg'
-          >
-            <XIcon className='h-6 w-6' />
+          <div className='flex items-center space-x-1.5'>
+            <div className='relative'>
+              <div
+                onClick={() => setTicketMenuOpen(!ticketMenuOpen)}
+                className={`h-10 w-10 flex items-center justify-center cursor-pointer ${
+                  ticketMenuOpen ? "bg-header-main" : "hover:bg-gray-100"
+                } transition-all duration-200 rounded-lg`}
+              >
+                <DotsHorizontalIcon
+                  className={`${ticketMenuOpen ? "text-white" : ""} h-6 w-6`}
+                />
+              </div>
+
+              {ticketMenuOpen && (
+                <button
+                  onClick={onTicketDelete}
+                  className='absolute -bottom-9 -left-5 border rounded-md px-2 py-1 z-50 text-sm hover:bg-gray-100 transition-all duration-200 select-none'
+                >
+                  Delete
+                </button>
+              )}
+            </div>
+
+            <div
+              onClick={closeTicketDetails}
+              className='h-10 w-10 flex items-center justify-center cursor-pointer hover:bg-gray-100 transition-all duration-200 rounded-lg'
+            >
+              <XIcon className='h-6 w-6' />
+            </div>
           </div>
         </div>
         <div>
-          <div className='pl-3'>
-            <p className='text-xs text-gray-text'>Project</p>
-            <h4 className='text-xl font-medium'>{ticket.project}</h4>
+          <div className='px-3'>
+            <div className='flex items-center justify-between'>
+              <p className='text-xs text-gray-text'>Project</p>
+            </div>
+
+            <div className='flex items-center justify-between'>
+              <h4 className='text-xl font-medium'>{ticket.project}</h4>
+              <form>
+                <select
+                  disabled={ticket.user !== user._id}
+                  value={ticket?.status}
+                  onChange={(e) => {
+                    dispatch(
+                      updateTicket({
+                        ticketId: ticket._id,
+                        ticketData: {
+                          status: e.target.value,
+                        },
+                      })
+                    );
+                  }}
+                  name='status'
+                  id='status'
+                  className={` px-2 py-2 rounded-lg cursor-pointer transition-all duration-200 font-semibold outline-none text-sm uppercase ${getStatusStyles()} ${
+                    ticket.user !== user._id
+                      ? "pointer-events-none select-none"
+                      : ""
+                  }`}
+                >
+                  <option
+                    className='bg-gray-100 text-header-main uppercase'
+                    value='to do'
+                  >
+                    to do
+                  </option>
+                  <option
+                    className='bg-gray-100 text-header-main uppercase'
+                    value='in progress'
+                  >
+                    in progress
+                  </option>
+                  <option
+                    className='bg-gray-100 text-header-main uppercase'
+                    value='closed'
+                  >
+                    closed
+                  </option>
+                </select>
+              </form>
+            </div>
           </div>
 
-          <div className='flex flex-col justify-center mt-4 pl-3'>
-            <p className='text-sm font-medium'>Description</p>
-            <p className='text-sm'>{ticket.description}</p>
+          <div className='flex flex-col justify-center mt-4 pl-1'>
+            <p className='text-sm font-medium pl-2'>Description</p>
+
+            <>
+              {editDescription ? (
+                <>
+                  <textarea
+                    style={{ resize: "none" }}
+                    className={`mt-1 bg-transparent outline-none hover:bg-gray-100 transition-all duration-200 px-3 py-2 rounded-md break-words  scrollbar-thin scrollbar-thumb-light-blue scrollbar-track-gray-300 overflow-y-scroll border`}
+                    type='text'
+                    value={editDescText}
+                    onChange={(e) => setEditDescText(e.target.value)}
+                    rows={6}
+                    ref={descRef}
+                    disabled={ticket.user !== user._id}
+                  />
+                  <div className='flex space-x-2 mt-2'>
+                    <button
+                      onClick={onEditSubmit}
+                      className='bg-deep-blue text-white py-1 px-2 rounded-md hover:bg-light-blue transition-all duration-100 text-sm mt-0.5 inline-flex w-fit'
+                    >
+                      Save
+                    </button>
+                    <button
+                      onClick={onEditCancel}
+                      className='hover:bg-gray-200 text-gray-text py-1 px-2 rounded-md transition-all duration-100 text-sm mt-0.5'
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </>
+              ) : (
+                <>
+                  {!isLoading && (
+                    <motion.p
+                      initial={{ display: "none" }}
+                      animate={{ display: "inline-flex" }}
+                      exit={{ display: "none" }}
+                      onClick={onEditEnable}
+                      className={`${
+                        ticket.user !== user._id
+                          ? "pointer-events-none select-none"
+                          : ""
+                      }  mt-1 bg-transparent outline-none hover:bg-gray-100 transition-all duration-200 px-3 py-2 rounded-md break-words`}
+                    >
+                      {ticket.description}
+                    </motion.p>
+                  )}
+                </>
+              )}
+            </>
           </div>
 
           <div
@@ -119,14 +297,16 @@ const TicketDetails = ({ closeTicketDetails, ticketId }) => {
               <div className='flex flex-col justify-center mt-5 pl-5'>
                 <p className='text-xs text-gray-text'>Created</p>
                 <p className='text-xs'>
-                  {moment(ticket.createdAt).startOf("hour").fromNow()}
+                  {moment(ticket.createdAt).format("MMMM Do YYYY, h:mm a")}
                 </p>
               </div>
               {ticket.createdAt !== ticket.updatedAt ? (
-                <div className='flex flex-col justify-center mt-2'>
+                <div className='flex flex-col justify-center mt-2 pl-5'>
                   <p className='text-xs text-gray-text'>Updated</p>
                   <p className='text-xs'>
-                    {moment(ticket.updatedAt).startOf("hour").fromNow()}
+                    {moment(
+                      moment(ticket.updatedAt).local().format()
+                    ).fromNow()}
                   </p>
                 </div>
               ) : null}
@@ -139,13 +319,13 @@ const TicketDetails = ({ closeTicketDetails, ticketId }) => {
           <div className='flex items-center space-x-2 w-full'>
             <div className='h-9 w-9 mb-1'>
               <span className='h-9 w-9 rounded-full flex items-center justify-center bg-nice-orange font-semibold text-base'>
-                {ticket.name?.charAt(0)}
+                {user.name?.charAt(0)}
               </span>
             </div>
 
             <form className='w-full'>
               <textarea
-                className='rounded-lg border w-full py-2 px-3 focus:outline-1 outline-deep-blue text-sm'
+                className='rounded-lg border w-full py-2 px-3 focus:outline-1 outline-deep-blue text-sm hover:border-gray-400 transition-all duration-150'
                 rows={2}
                 style={{ resize: "none" }}
                 name='commentText'

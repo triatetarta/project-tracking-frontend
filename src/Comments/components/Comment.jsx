@@ -67,12 +67,14 @@ const Comment = ({
           <p className='text-xs font-semibold'>{name}</p>
           <span className='ml-3 text-gray-text'>
             {createdAt === updatedAt ? (
-              <span>{moment(createdAt).startOf("hour").fromNow()}</span>
+              <span>
+                {moment(moment(createdAt).local().format()).fromNow()}
+              </span>
             ) : (
               <>
                 <span className='mr-1.5 italic text-gray-text'>edited</span>
                 <span className='text-gray-text'>
-                  {moment(updatedAt).startOf("hour").fromNow()}
+                  {moment(moment(updatedAt).local().format()).fromNow()}
                 </span>
               </>
             )}
