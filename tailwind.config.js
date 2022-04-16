@@ -17,6 +17,7 @@ module.exports = {
         "nice-orange": "#FF991F",
         "gray-text": "#6B778C",
         "red-text": "#DE350B",
+        "red-text-light": "#e3522d",
         "ticket-bg": "#DEEBFF",
         "ticket-bg-hover": "#B3D4FF",
       },

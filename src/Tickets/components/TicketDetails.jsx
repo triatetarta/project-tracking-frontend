@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteTicket, getTicket, updateTicket } from "../ticketSlice";
+import { getTicket, updateTicket } from "../ticketSlice";
 import {
   XIcon,
   ChevronDownIcon,
@@ -8,11 +8,13 @@ import {
   DotsHorizontalIcon,
 } from "@heroicons/react/solid";
 import { TicketIcon } from "@heroicons/react/outline";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { Comment } from "../../Comments/";
 import moment from "moment";
 import toast from "react-hot-toast";
 import { createComment, getComments } from "../../Comments/commentSlice";
+import Modal from "../../Modal/components/Modal";
+import { openTicketModal } from "../../Modal/modalSlice";
 
 const TicketDetails = ({ closeTicketDetails, ticketId }) => {
   const { ticket, isLoading, isError, message, updateSuccess } = useSelector(
@@ -20,6 +22,9 @@ const TicketDetails = ({ closeTicketDetails, ticketId }) => {
   );
   const { comments, isLoading: commentsIsLoading } = useSelector(
     (state) => state.comment
+  );
+  const { ticketModalOpen, commentModalOpen } = useSelector(
+    (state) => state.modal
   );
   const { user } = useSelector((state) => state.auth);
   const [detailsOpen, setDetailsOpen] = useState(false);
@@ -89,8 +94,7 @@ const TicketDetails = ({ closeTicketDetails, ticketId }) => {
   };
 
   const onTicketDelete = () => {
-    dispatch(deleteTicket(ticketId));
-    closeTicketDetails();
+    dispatch(openTicketModal(true));
   };
 
   const getStatusStyles = useCallback(() => {
@@ -118,6 +122,21 @@ const TicketDetails = ({ closeTicketDetails, ticketId }) => {
         exit={{ y: 100, opacity: 0 }}
         className='bg-white py-6 px-4 mt-28 w-[350px] rounded-md shadow-sm'
       >
+        <AnimatePresence>
+          {ticketModalOpen && (
+            <Modal
+              ticketDelete
+              ticketId={ticketId}
+              ticket={ticket}
+              closeTicketDetails={closeTicketDetails}
+            />
+          )}
+        </AnimatePresence>
+
+        <AnimatePresence>
+          {commentModalOpen && <Modal commentDelete />}
+        </AnimatePresence>
+
         <div className='flex items-center justify-between mb-10'>
           <div className='flex items-center justify-center'>
             <span>
@@ -127,27 +146,29 @@ const TicketDetails = ({ closeTicketDetails, ticketId }) => {
           </div>
 
           <div className='flex items-center space-x-1.5'>
-            <div className='relative'>
-              <div
-                onClick={() => setTicketMenuOpen(!ticketMenuOpen)}
-                className={`h-10 w-10 flex items-center justify-center cursor-pointer ${
-                  ticketMenuOpen ? "bg-header-main" : "hover:bg-gray-100"
-                } transition-all duration-200 rounded-lg`}
-              >
-                <DotsHorizontalIcon
-                  className={`${ticketMenuOpen ? "text-white" : ""} h-6 w-6`}
-                />
-              </div>
-
-              {ticketMenuOpen && (
-                <button
-                  onClick={onTicketDelete}
-                  className='absolute -bottom-9 -left-5 border rounded-md px-2 py-1 z-50 text-sm hover:bg-gray-100 transition-all duration-200 select-none'
+            {user?._id === ticket?.user && (
+              <div className='relative'>
+                <div
+                  onClick={() => setTicketMenuOpen(!ticketMenuOpen)}
+                  className={`h-10 w-10 flex items-center justify-center cursor-pointer ${
+                    ticketMenuOpen ? "bg-header-main" : "hover:bg-gray-100"
+                  } transition-all duration-200 rounded-lg`}
                 >
-                  Delete
-                </button>
-              )}
-            </div>
+                  <DotsHorizontalIcon
+                    className={`${ticketMenuOpen ? "text-white" : ""} h-6 w-6`}
+                  />
+                </div>
+
+                {ticketMenuOpen && (
+                  <button
+                    onClick={onTicketDelete}
+                    className={`absolute -bottom-9 -left-5 border rounded-md px-2 py-1 z-40 text-sm hover:bg-gray-100 transition-all duration-200 select-none`}
+                  >
+                    Delete
+                  </button>
+                )}
+              </div>
+            )}
 
             <div
               onClick={closeTicketDetails}

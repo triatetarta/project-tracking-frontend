@@ -21,7 +21,7 @@ const Account = () => {
   };
 
   return (
-    <section className='flex flex-col mb-10'>
+    <section className='flex flex-col min-h-[calc(100vh-17.9rem)]'>
       <header className='h-48 w-full bg-gradient-to-l from-amber-600 to-amber-300'>
         <div className='container mx-auto relative h-full'>
           <div className='h-28 w-28 border rounded-full flex items-center justify-center bg-nice-orange font-semibold text-header-main text-6xl absolute -bottom-8 left-0 select-none'>

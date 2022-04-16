@@ -35,7 +35,7 @@ const NewTicket = ({ setCreateNew }) => {
       setProject("");
       setDescription("");
       toast.success("Your ticket has been created!");
-      navigate("/tickets");
+      navigate("/");
     }
   }, [dispatch, isError, isSuccess, message, navigate]);
 
@@ -63,7 +63,7 @@ const NewTicket = ({ setCreateNew }) => {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.1 }}
-      className='fixed top-0 right-0 left-0 bottom-0 w-full h-full bg-black/20  backdrop-blur-sm z-50'
+      className='fixed top-0 right-0 left-0 bottom-0 w-full h-full bg-black/20  backdrop-blur-sm z-40'
     >
       <motion.div
         initial={{ y: 100, opacity: 0 }}

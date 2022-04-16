@@ -50,6 +50,22 @@ const deleteComment = async (ticketId, commentId, token) => {
   return response.data;
 };
 
+// Delete all ticket comments
+const deleteAllTicketComments = async (ticketId, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  const response = await axios.delete(
+    `${API_URL}${ticketId}/comments/`,
+    config
+  );
+
+  return response.data;
+};
+
 // Update ticket comment
 const updateComment = async (ticketId, commentId, commentText, token) => {
   const config = {
@@ -72,6 +88,7 @@ const commentService = {
   createComment,
   deleteComment,
   updateComment,
+  deleteAllTicketComments,
 };
 
 export default commentService;

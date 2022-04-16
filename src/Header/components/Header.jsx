@@ -120,15 +120,6 @@ const Header = () => {
                     Profile
                   </li>
                   <li
-                    onClick={() => {
-                      dispatch(closeAccount());
-                      navigate("/tickets");
-                    }}
-                    className='accountMenu cursor-pointer py-2 px-4 hover:bg-gray-100'
-                  >
-                    Tickets
-                  </li>
-                  <li
                     onClick={onLogout}
                     className='accountMenu cursor-pointer py-2 px-4 hover:bg-gray-100'
                   >

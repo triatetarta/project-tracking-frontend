@@ -1,7 +1,8 @@
 import moment from "moment";
 import { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteComment, updateComment } from "../commentSlice";
+import { openCommentModal, setCommentId } from "../../Modal/modalSlice";
+import { updateComment } from "../commentSlice";
 
 const Comment = ({
   _id,
@@ -36,12 +37,14 @@ const Comment = ({
   };
 
   const onDelete = () => {
-    dispatch(
-      deleteComment({
-        ticketId: ticketId,
-        commentId: _id,
-      })
-    );
+    dispatch(openCommentModal(true));
+    dispatch(setCommentId(_id));
+    // dispatch(
+    //   deleteComment({
+    //     ticketId: ticketId,
+    //     commentId: _id,
+    //   })
+    // );
   };
 
   const onUpdate = () => {
