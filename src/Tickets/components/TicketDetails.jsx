@@ -114,7 +114,7 @@ const TicketDetails = ({ closeTicketDetails, ticketId }) => {
       exit={{ opacity: 0 }}
       transition={{ duration: 0.1 }}
       onClick={closeHandle}
-      className='bg-black/20 backdrop-blur-sm fixed top-0 w-full h-full z-50 flex justify-center items-start ticketBackdrop text-header-main'
+      className='bg-black/20 backdrop-blur-sm fixed top-0 left-0 w-full h-full z-50 flex justify-center items-start ticketBackdrop text-header-main'
     >
       <motion.div
         initial={{ y: 100, opacity: 0 }}
@@ -185,7 +185,7 @@ const TicketDetails = ({ closeTicketDetails, ticketId }) => {
             </div>
 
             <div className='flex items-center justify-between'>
-              <h4 className='text-xl font-medium'>{ticket.project}</h4>
+              <h4 className='text-lg font-medium pr-2'>{ticket.project}</h4>
               <form>
                 <select
                   disabled={ticket.user !== user._id}

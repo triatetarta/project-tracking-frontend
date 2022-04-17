@@ -4,15 +4,19 @@ import { motion } from "framer-motion";
 import toast from "react-hot-toast";
 import { createTicket, reset } from "../ticketSlice";
 import { useNavigate } from "react-router-dom";
+import CreateProject from "../../Projects/components/CreateProject";
 
 const NewTicket = ({ setCreateNew }) => {
   const { user } = useSelector((state) => state.auth);
   const { isLoading, isError, isSuccess, message, createSuccess } = useSelector(
     (state) => state.tickets
   );
+  const { projects } = useSelector((state) => state.projects);
+
   const [name] = useState(user?.name);
   const [email] = useState(user?.email);
-  const [project, setProject] = useState("React");
+  const [project, setProject] = useState("");
+  const [projectNames, setProjectNames] = useState([]);
   const [description, setDescription] = useState("");
 
   const textareaRef = useRef(null);
@@ -38,6 +42,23 @@ const NewTicket = ({ setCreateNew }) => {
       navigate("/");
     }
   }, [dispatch, isError, isSuccess, message, navigate]);
+
+  useEffect(() => {
+    if (projects === undefined) return;
+
+    const justProjects = projects.map((project) => {
+      return project.title;
+    });
+
+    const uniqueProjects = [...new Set(justProjects)];
+
+    setProjectNames(uniqueProjects);
+  }, [projects]);
+
+  useEffect(() => {
+    if (projectNames === undefined) return;
+    setProject(projectNames[0]);
+  }, [projectNames]);
 
   const cancelCreateTicket = (e) => {
     e.preventDefault();
@@ -116,19 +137,27 @@ const NewTicket = ({ setCreateNew }) => {
                 Project
                 {!project && <span className='text-red-text ml-0.5'>*</span>}
               </label>
-              <select
-                className='p-2 border rounded-md mb-3 text-sm hover:bg-gray-100
+              <div className='flex items-center justify-between'>
+                <select
+                  className='p-2 border rounded-md mb-3 text-sm hover:bg-gray-100
                 transition-all duration-200 cursor-pointer focus:outline-1 outline-deep-blue'
-                name='project'
-                id='project'
-                value={project}
-                onChange={(e) => setProject(e.target.value)}
-              >
-                <option value='React'>React</option>
-                <option value='NextJS'>NextJS</option>
-                <option value='TailwindCSS'>TailwindCSS</option>
-                <option value='MongoDB'>MongoDB</option>
-              </select>
+                  name='project'
+                  id='project'
+                  value={project}
+                  onChange={(e) => setProject(e.target.value)}
+                >
+                  {projectNames?.map((project, index) => {
+                    return (
+                      <option key={index} value={project}>
+                        {project}
+                      </option>
+                    );
+                  })}
+                </select>
+                <div className='flex items-center mb-3'>
+                  <CreateProject />
+                </div>
+              </div>
             </div>
             <div className='mb-3'>
               <label

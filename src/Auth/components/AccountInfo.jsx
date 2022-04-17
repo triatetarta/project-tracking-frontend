@@ -41,7 +41,7 @@ const AccountInfo = () => {
 
   const onUpdate = () => {
     const userData = {
-      job,
+      jobTitle: job,
       department,
       organization,
       location,

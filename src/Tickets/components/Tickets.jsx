@@ -11,6 +11,7 @@ import { AnimatePresence } from "framer-motion";
 import NewTicket from "./NewTicket";
 import Ticket from "./Ticket";
 import TicketDetails from "./TicketDetails";
+import { NewProject } from "../../Projects/";
 
 const Tickets = () => {
   const [createNew, setCreateNew] = useState(false);
@@ -24,6 +25,7 @@ const Tickets = () => {
     deleteSuccess,
     createSuccess,
   } = useSelector((state) => state.tickets);
+  const { newProjectModalOpen } = useSelector((state) => state.projects);
 
   const dispatch = useDispatch();
 
@@ -53,7 +55,7 @@ const Tickets = () => {
   };
 
   return (
-    <section className='min-h-[calc(100vh-17.9rem)] flex items-center justify-between flex-col text-header-main relative'>
+    <section className='min-h-[calc(100vh-17.9rem)] flex items-center justify-between flex-col text-header-main relative flex-grow'>
       <AnimatePresence>
         {openTicket && (
           <TicketDetails
@@ -88,7 +90,7 @@ const Tickets = () => {
 
           <button
             onClick={() => setCreateNew(true)}
-            className='flex items-center mt-3 hover:bg-gray-200 px-2 py-3 rounded-lg'
+            className='flex items-center mt-3 hover:bg-gray-200 transition-all duration-200 px-2 py-3 rounded-lg'
           >
             <PlusIcon className='w-3 h-3 text-gray-text' />
             <span className='text-xs font-semibold'>Create Ticket</span>
@@ -161,6 +163,8 @@ const Tickets = () => {
       <AnimatePresence>
         {createNew && <NewTicket setCreateNew={setCreateNew} />}
       </AnimatePresence>
+
+      <AnimatePresence>{newProjectModalOpen && <NewProject />}</AnimatePresence>
 
       <div className='container fixed bottom-60'>
         <div className='relative'>

@@ -20,6 +20,9 @@ module.exports = {
         "red-text-light": "#e3522d",
         "ticket-bg": "#DEEBFF",
         "ticket-bg-hover": "#B3D4FF",
+        "sidebar-bg": "#FAFBFC",
+        "teams-bg": "#904EE2",
+        "projects-bg": "#00C7E6",
       },
       fontFamily: {
         Poppins: ["Poppins", "sans-serif"],

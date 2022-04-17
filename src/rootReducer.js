@@ -4,6 +4,7 @@ import { reducer as tickets } from "./Tickets";
 import { reducer as header } from "./Header";
 import { reducer as comment } from "./Comments";
 import { reducer as modal } from "./Modal";
+import { reducer as projects } from "./Projects";
 
 const rootReducer = combineReducers({
   auth,
@@ -11,6 +12,7 @@ const rootReducer = combineReducers({
   header,
   comment,
   modal,
+  projects,
 });
 
 export default rootReducer;
