@@ -9,21 +9,9 @@ const webpack = require("webpack");
 
 const env = dotenv.config().parsed;
 
-const envKeys = Object.keys(env).reduce(
-  (prev, next) => {
-    prev[`process.env.${next}`] = JSON.stringify(env[next]);
-
-    return prev;
-  },
-  {
-    NODE_ENV: JSON.stringify(process.env.NODE_ENV),
-    REACT_APP_API_URL: JSON.stringify(process.env.REACT_APP_API_URL),
-  }
-);
-
 const isDevelopment = process.env.NODE_ENV !== "production";
 
-module.exports = {
+module.exports = (env) => ({
   mode: isDevelopment ? "development" : "production",
   entry: "./src/index.js",
   output: {
@@ -70,7 +58,9 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: "./public/index.html",
     }),
-    new webpack.DefinePlugin(envKeys),
+    new webpack.DefinePlugin({
+      REACT_APP_API_URL: JSON.stringify(process.env.REACT_APP_API_URL),
+    }),
   ],
   target: "web",
   devtool: "source-map",
@@ -90,4 +80,4 @@ module.exports = {
     open: true,
     historyApiFallback: true,
   },
-};
+});
