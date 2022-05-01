@@ -2,16 +2,12 @@ const path = require("path");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
-const Dotenv = require("dotenv-webpack");
-const dotenv = require("dotenv");
 const TerserPlugin = require("terser-webpack-plugin");
 const webpack = require("webpack");
 
-const env = dotenv.config().parsed;
-
 const isDevelopment = process.env.NODE_ENV !== "production";
 
-module.exports = (env) => ({
+module.exports = {
   mode: isDevelopment ? "development" : "production",
   entry: "./src/index.js",
   output: {
@@ -53,12 +49,12 @@ module.exports = (env) => ({
   },
   plugins: [
     new CleanWebpackPlugin(),
-    // new Dotenv(),
     new MiniCssExtractPlugin(),
     new HtmlWebpackPlugin({
       template: "./public/index.html",
     }),
     new webpack.DefinePlugin({
+      NODE_ENV: JSON.stringify(process.env.NODE_ENV),
       REACT_APP_API_URL: JSON.stringify(process.env.REACT_APP_API_URL),
     }),
   ],
@@ -80,4 +76,4 @@ module.exports = (env) => ({
     open: true,
     historyApiFallback: true,
   },
-});
+};
