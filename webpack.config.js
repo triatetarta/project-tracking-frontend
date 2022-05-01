@@ -51,7 +51,7 @@ module.exports = {
   plugins: [
     new CleanWebpackPlugin(),
     new Dotenv({
-      path: path.join(__dirname, "dist"),
+      path: path.resolve(process.cwd(), ".env"),
     }),
     new MiniCssExtractPlugin(),
     new HtmlWebpackPlugin({
