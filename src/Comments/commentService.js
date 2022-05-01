@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "/api/tickets/";
+const API_URL = `${process.env.API_URL}/api/tickets/`;
 
 // Get ticket comments
 const getComments = async (ticketId, token) => {
