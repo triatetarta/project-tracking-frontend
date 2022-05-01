@@ -1,6 +1,7 @@
 import axios from "axios";
+import { API_GLOBAL_URL } from "../constants/api_url";
 
-const API_URL = `https://project-tracking-manager.herokuapp.com/api/tickets/`;
+const API_URL = `${API_GLOBAL_URL}/api/tickets/`;
 
 // Create new ticket
 const createTicket = async (ticketData, token) => {
