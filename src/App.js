@@ -10,8 +10,12 @@ import { closeAccount } from "./Header/headerSlice";
 import { Footer } from "./Footer/";
 import { Account } from "./Auth/";
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 const App = () => {
   const dispatch = useDispatch();
+
+  console.log(API_URL);
 
   const closeOpenMenus = (e) => {
     e.stopPropagation();
