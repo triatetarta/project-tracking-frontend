@@ -13,8 +13,7 @@ import Ticket from "./Ticket";
 import TicketDetails from "./TicketDetails";
 import { NewProject } from "../../Projects/";
 
-const Tickets = () => {
-  const [createNew, setCreateNew] = useState(false);
+const Tickets = ({ setCreateNew, createNew }) => {
   const [selectedId, setSelectedId] = useState("");
   const [openTicket, setOpenTicket] = useState(false);
   const {
@@ -55,7 +54,7 @@ const Tickets = () => {
   };
 
   return (
-    <section className='min-h-[calc(100vh-17.9rem)] flex items-center justify-between flex-col text-header-main relative flex-grow'>
+    <section className='min-h-[calc(100vh-17.9rem)] px-4 flex items-center justify-between flex-col text-header-main relative flex-grow'>
       <AnimatePresence>
         {openTicket && (
           <TicketDetails
@@ -165,17 +164,6 @@ const Tickets = () => {
       </AnimatePresence>
 
       <AnimatePresence>{newProjectModalOpen && <NewProject />}</AnimatePresence>
-
-      <div className='container fixed bottom-60'>
-        <div className='relative'>
-          <button
-            onClick={() => setCreateNew(true)}
-            className='bg-deep-blue text-white self-end mb-4 px-4 py-4 absolute bottom-0 right-0  rounded-full hover:bg-light-blue hover:scale-105 active:scale-95 transition-all duration-150'
-          >
-            <PlusIcon className='w-8 h-8' />
-          </button>
-        </div>
-      </div>
     </section>
   );
 };

@@ -14,6 +14,7 @@ const Sidebar = () => {
   const { projects, isSuccess, isCreatedSuccess } = useSelector(
     (state) => state.projects
   );
+  const { tickets } = useSelector((state) => state.tickets);
 
   const dispatch = useDispatch();
 
@@ -51,7 +52,7 @@ const Sidebar = () => {
   }, [isCreatedSuccess]);
 
   return (
-    <aside className='bg-sidebar-bg w-[200px] min-h-[calc(100vh-17.9rem)] border-l border-r py-10 px-2 text-header-main'>
+    <aside className='bg-sidebar-bg w-[300px] lg:w-[200px] min-h-[calc(100vh-17.9rem)] border-l border-r py-10 px-2 text-header-main'>
       <div className='border-b-2'>
         <div className='flex flex-col px-3 pb-2'>
           <p className='text-xs text-gray-text'>Hello,</p>
@@ -99,8 +100,12 @@ const Sidebar = () => {
 
       <div className='px-3 mt-10'>
         <h3 className='uppercase text-xs font-bold'>People</h3>
-        <div className='flex items-center space-x-1 flex-wrap mt-2 w-full'>
+        <div className='flex items-center flex-wrap mt-2 w-full'>
           {users?.map((user, index) => {
+            const filteredTickets = tickets?.filter(
+              (tickets) => tickets.user === user._id
+            );
+
             return (
               <div
                 onMouseEnter={() => {
@@ -112,7 +117,7 @@ const Sidebar = () => {
                   setIndexHover(null);
                 }}
                 key={user?._id}
-                className='flex items-center relative'
+                className='flex items-center relative mb-1 mr-1'
               >
                 <span className='h-6 w-6 rounded-full flex items-center justify-center bg-nice-orange font-semibold text-sm select-none '>
                   {user?.name?.charAt(0)}
@@ -125,9 +130,29 @@ const Sidebar = () => {
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}
                       transition={{ duration: 0.15 }}
-                      className='absolute -bottom-6 -left-1/2 whitespace-nowrap text-xs transform -translate-x-1/1 bg-header-main text-white font-normal px-1.5 py-0.5 rounded-md'
+                      className='absolute -top-[4.75rem] -left-1/2 whitespace-nowrap text-xs transform -translate-x-1/1 bg-header-main text-white font-normal px-1.5 py-0.5 rounded-md z-40  shadow-sm'
                     >
-                      {user?.name}
+                      <div className='flex flex-col p-1.5'>
+                        <p className='text-sm'>{user?.name}</p>
+                        <p className='text-gray-300 text-[0.65rem]'>
+                          {user?.email}
+                        </p>
+                        <p className='pt-1'>
+                          {filteredTickets?.length !== 0 &&
+                            filteredTickets?.length}
+
+                          <span
+                            className={`${
+                              filteredTickets?.length !== 0 && "ml-1"
+                            }`}
+                          >
+                            {filteredTickets?.length > 1 && "tickets created"}
+                            {filteredTickets?.length === 1 && "ticket created"}
+                            {filteredTickets?.length === 0 &&
+                              `${user?.name} has no tickets`}
+                          </span>
+                        </p>
+                      </div>
                     </motion.div>
                   )}
                 </AnimatePresence>

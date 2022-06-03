@@ -10,7 +10,7 @@ import {
 import { LocationMarkerIcon } from "@heroicons/react/solid";
 import { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { updateUser } from "../authSlice";
+import { updateUser } from "../../Auth/authSlice";
 
 const AccountInfo = () => {
   const [editDetails, setEditDetails] = useState(false);

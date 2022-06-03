@@ -4,11 +4,10 @@ import { Login, Register } from "./Auth";
 import { Header } from "./Header";
 import { Home } from "./Home/";
 import { PrivateRoute } from "./PrivateRoute";
-import { Tickets } from "./Tickets";
 import { useDispatch } from "react-redux";
 import { closeAccount } from "./Header/headerSlice";
 import { Footer } from "./Footer/";
-import { Account } from "./Auth/";
+import { Account } from "./Account/";
 
 const App = () => {
   const dispatch = useDispatch();
