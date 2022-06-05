@@ -83,17 +83,19 @@ const Comment = ({
             )}
           </span>
         </div>
-
-        <input
-          ref={inputRef}
-          className={`w-full bg-transparent rounded-md mb-3 text-sm focus:outline-1 outline-deep-blue ${
-            editEnable ? "border px-2 py-4" : ""
-          }`}
-          type='text'
-          value={editEnable ? editText : text}
-          disabled={!editEnable}
-          onChange={(e) => setEditText(e.target.value)}
-        />
+        {!editEnable ? (
+          <p className='text-sm w-full mb-3'>{text}</p>
+        ) : (
+          <textarea
+            ref={inputRef}
+            value={editEnable ? editText : text}
+            onChange={(e) => setEditText(e.target.value)}
+            disabled={!editEnable}
+            className='rounded-lg border w-full py-2 px-3 focus:outline-1 outline-deep-blue text-sm hover:border-gray-400 transition-all duration-150'
+            rows={2}
+            style={{ resize: "none" }}
+          />
+        )}
 
         <div>
           {commentUser === user._id ? (

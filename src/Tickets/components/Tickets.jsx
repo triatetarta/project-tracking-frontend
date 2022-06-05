@@ -12,6 +12,7 @@ import NewTicket from "./NewTicket";
 import Ticket from "./Ticket";
 import TicketDetails from "./TicketDetails";
 import { NewProject } from "../../Projects/";
+import SkeletonTicket from "../../Skeletons/SkeletonTicket";
 
 const Tickets = ({ setCreateNew, createNew }) => {
   const [selectedId, setSelectedId] = useState("");
@@ -54,7 +55,7 @@ const Tickets = ({ setCreateNew, createNew }) => {
   };
 
   return (
-    <section className='min-h-[calc(100vh-17.9rem)] px-4 flex items-center justify-between flex-col text-header-main relative flex-grow'>
+    <section className='min-h-[calc(100vh-17.9rem)] px-4 pb-4 flex items-center justify-between flex-col text-header-main relative flex-grow'>
       <AnimatePresence>
         {openTicket && (
           <TicketDetails
@@ -74,17 +75,23 @@ const Tickets = ({ setCreateNew, createNew }) => {
           </h1>
 
           <div className='flex flex-col space-y-2'>
-            {tickets
-              ?.filter((ticket) => ticket.status === "to do")
-              .map((ticket) => {
-                return (
-                  <Ticket
-                    key={ticket._id}
-                    {...ticket}
-                    ticketClickHandle={ticketClickHandle}
-                  />
-                );
-              })}
+            {isLoading ? (
+              <SkeletonTicket />
+            ) : (
+              <>
+                {tickets
+                  ?.filter((ticket) => ticket.status === "to do")
+                  .map((ticket) => {
+                    return (
+                      <Ticket
+                        key={ticket._id}
+                        {...ticket}
+                        ticketClickHandle={ticketClickHandle}
+                      />
+                    );
+                  })}
+              </>
+            )}
           </div>
 
           <button
@@ -105,17 +112,23 @@ const Tickets = ({ setCreateNew, createNew }) => {
           </h1>
 
           <div className='flex flex-col space-y-2'>
-            {tickets
-              ?.filter((ticket) => ticket.status === "in progress")
-              .map((ticket) => {
-                return (
-                  <Ticket
-                    key={ticket._id}
-                    {...ticket}
-                    ticketClickHandle={ticketClickHandle}
-                  />
-                );
-              })}
+            {isLoading ? (
+              <SkeletonTicket />
+            ) : (
+              <>
+                {tickets
+                  ?.filter((ticket) => ticket.status === "in progress")
+                  .map((ticket) => {
+                    return (
+                      <Ticket
+                        key={ticket._id}
+                        {...ticket}
+                        ticketClickHandle={ticketClickHandle}
+                      />
+                    );
+                  })}
+              </>
+            )}
           </div>
 
           <button
@@ -136,17 +149,23 @@ const Tickets = ({ setCreateNew, createNew }) => {
           </h1>
 
           <div className='flex flex-col space-y-2'>
-            {tickets
-              ?.filter((ticket) => ticket.status === "closed")
-              .map((ticket) => {
-                return (
-                  <Ticket
-                    key={ticket._id}
-                    {...ticket}
-                    ticketClickHandle={ticketClickHandle}
-                  />
-                );
-              })}
+            {isLoading ? (
+              <SkeletonTicket />
+            ) : (
+              <>
+                {tickets
+                  ?.filter((ticket) => ticket.status === "closed")
+                  .map((ticket) => {
+                    return (
+                      <Ticket
+                        key={ticket._id}
+                        {...ticket}
+                        ticketClickHandle={ticketClickHandle}
+                      />
+                    );
+                  })}
+              </>
+            )}
           </div>
 
           <button

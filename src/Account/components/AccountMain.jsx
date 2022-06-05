@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getAllTickets, reset } from "../../Tickets/ticketSlice";
 import { useNavigate } from "react-router-dom";
 import AccountTicket from "./AccountTicket";
+import SkeletonWorkedOn from "../../Skeletons/SkeletonWorkedOn";
 
 const AccountMain = ({ ticketClickHandle }) => {
   const { tickets, isLoading, isSuccess, updateSuccess } = useSelector(
@@ -47,38 +48,48 @@ const AccountMain = ({ ticketClickHandle }) => {
         </p>
       </div>
 
-      {hasTickets.length < 1 ? (
-        <div className='border rounded-lg p-6 text-header-main'>
-          <div className='flex flex-col justify-center items-center'>
-            <h4 className='text-xl font-semibold'>
-              There is no work to see here
-            </h4>
-            <p className='text-sm'>Things you created or edited</p>
-          </div>
+      {isLoading ? (
+        <div className='border rounded-lg p-6'>
+          <SkeletonWorkedOn />
+          <SkeletonWorkedOn />
+          <SkeletonWorkedOn />
         </div>
       ) : (
-        <div className='border rounded-lg p-5'>
-          {tickets
-            ?.filter((ticket) => {
-              return ticket.user === user._id;
-            })
-            ?.map((ticket) => {
-              return (
-                <AccountTicket
-                  key={ticket._id}
-                  {...ticket}
-                  ticketClickHandle={ticketClickHandle}
-                />
-              );
-            })}
+        <>
+          {hasTickets.length < 1 ? (
+            <div className='border rounded-lg p-6 text-header-main'>
+              <div className='flex flex-col justify-center items-center'>
+                <h4 className='text-xl font-semibold'>
+                  There is no work to see here
+                </h4>
+                <p className='text-sm'>Things you created or edited</p>
+              </div>
+            </div>
+          ) : (
+            <div className='border rounded-lg p-5'>
+              {tickets
+                ?.filter((ticket) => {
+                  return ticket.user === user._id;
+                })
+                ?.map((ticket) => {
+                  return (
+                    <AccountTicket
+                      key={ticket._id}
+                      {...ticket}
+                      ticketClickHandle={ticketClickHandle}
+                    />
+                  );
+                })}
 
-          <button
-            onClick={() => navigate("/")}
-            className='text-xs text-gray-text hover:underline ml-3 mt-6'
-          >
-            View all
-          </button>
-        </div>
+              <button
+                onClick={() => navigate("/")}
+                className='text-xs text-gray-text hover:underline ml-3 mt-6'
+              >
+                View all
+              </button>
+            </div>
+          )}
+        </>
       )}
     </div>
   );
